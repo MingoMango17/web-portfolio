@@ -11,7 +11,7 @@ const About = () => {
         </div>
 
         <p className="text-white text-justify text-center max-w-200">
-          As a passionate Full Stack Developer currently pursuing my Bachelor's
+          As a passionate Full Stack Developer currently pursuing my Bachelor&apos;s
           in Computer Science at the University of the Philippines Cebu, I
           combine academic knowledge with hands-on industry experience to build
           efficient, user-centered applications.
@@ -28,7 +28,7 @@ const About = () => {
           My interests in video games, emerging technologies, and automotive
           engineering inspire my approach to development—I believe in creating
           solutions that are not just functional, but engaging and
-          forward-thinking. I'm constantly learning and expanding my skillset,
+          forward-thinking. I&apos;m constantly learning and expanding my skillset,
           always ready to tackle the next challenge with enthusiasm and
           dedication.
         </p>

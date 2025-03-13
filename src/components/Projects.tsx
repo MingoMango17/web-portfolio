@@ -91,8 +91,8 @@ const Projects = () => {
                   <Image
                     src={project.image}
                     alt={project.name}
-                    width={600}
-                    height={400}
+                    width={1200}
+                    height={800}
                     className="w-full h-auto object-cover rounded-lg"
                     style={{ aspectRatio: "3/2" }}
                   />

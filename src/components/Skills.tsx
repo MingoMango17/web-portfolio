@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import Nav from "./Nav";
 
 const Skills = () => {
   const technologies = [
