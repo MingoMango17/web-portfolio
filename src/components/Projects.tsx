@@ -43,6 +43,23 @@ const Projects = () => {
         "Git",
       ],
     },
+    {
+      id: 3,
+      name: "Kahayag",
+      description: "A simple restaurant website prototype",
+      cta: "View here",
+      link: "",
+      github: "https://github.com/MingoMango17/KahayagFE",
+      image: "/kahayag.png",
+      tags: [
+        "Figma",
+        "User Interface",
+        "User Centric Design",
+        "Tailwindcss",
+        "React",
+        "Git",
+      ],
+    },
   ];
 
   return (
@@ -68,12 +85,16 @@ const Projects = () => {
                 </h3>
                 <p className="text-gray-300 mb-4">{project.description}</p>
                 <div className="rounded-md w-fit mb-6 flex gap-2">
-                  <a href={project.github}>
-                    <Github size={20} />
-                  </a>
-                  <a href={project.link}>
-                    <ExternalLink size={20} />
-                  </a>
+                  {project.github && (
+                    <a href={project.github}>
+                      <Github size={20} />
+                    </a>
+                  )}
+                  {project.link && (
+                    <a href={project.link}>
+                      <ExternalLink size={20} />
+                    </a>
+                  )}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {project.tags.map((tag, i) => (
@@ -101,7 +122,7 @@ const Projects = () => {
                     alt={project.name}
                     width={1200}
                     height={800}
-                    className="w-full h-auto object-cover rounded-lg"
+                    className="w-full h-auto object-contain rounded-lg"
                     style={{ aspectRatio: "3/2" }}
                   />
                 </div>

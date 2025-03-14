@@ -26,7 +26,9 @@ const Main = () => {
             <div className="flex flex-col gap-2">
               <span className="flex items-center gap-2">
                 <MapPin size={18} />
-                <p>Cebu City, Cebu</p>
+                <a href="https://www.google.com/maps/place/Cebu+City,+6000+Cebu/@10.3787539,123.7638937,36124m/data=!3m2!1e3!4b1!4m6!3m5!1s0x33a999258dcd2dfd:0x4c34030cdbd33507!8m2!3d10.3156992!4d123.8854366!16zL20vMDFwX2x5?entry=ttu&g_ep=EgoyMDI1MDMxMS4wIKXMDSoASAFQAw%3D%3D">
+                  <p>Cebu City, Cebu, Philippines</p>
+                </a>
               </span>
 
               <div className="flex gap-4 mt-2">

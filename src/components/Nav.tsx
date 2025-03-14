@@ -1,5 +1,6 @@
 // Nav.jsx
 import React from "react";
+import Link from "next/link";
 
 const Nav = () => {
   return (
@@ -17,10 +18,17 @@ const Nav = () => {
           </text>
         </svg>
 
-        <div className="flex gap-8 text-center">
-          <span>About</span>
-          <span>Work</span>
-          <span>Contact</span>
+        <div className="flex gap-8 text-center items-center">
+          <span className="text-white cursor-pointer hover:text-gray-300">About</span>
+          <span className="text-white cursor-pointer hover:text-gray-300">Work</span>
+          <span className="text-white cursor-pointer hover:text-gray-300">Contact</span>
+          <Link 
+            href="/resume.pdf" 
+            download
+            className="bg-white text-[#030712] px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
+          >
+            Download Resume
+          </Link>
         </div>
       </div>
     </div>
