@@ -35,7 +35,7 @@ const Main = () => {
                 <a href="https://github.com/MingoMango17">
                   <Github className="cursor-pointer hover:text-gray-400 transition-colors" />
                 </a>
-                <a href="https://www.linkedin.com/feed/">
+                <a href="https://www.linkedin.com/in/junry-mingo-2bb819246/">
                   <Linkedin className="cursor-pointer hover:text-gray-400 transition-colors" />
                 </a>
               </div>
