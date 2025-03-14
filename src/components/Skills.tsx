@@ -16,7 +16,7 @@ const Skills = () => {
   ];
 
   return (
-    <div className="bg-[#030712] text-white py-16">
+    <div id="skills" className="bg-[#030712] text-white py-16">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex flex-col items-center mb-12">
           <div className="bg-[#1F2937] text-white rounded-lg px-4 py-2 text-center mb-6">
