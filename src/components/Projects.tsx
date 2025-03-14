@@ -1,3 +1,4 @@
+import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
@@ -10,6 +11,7 @@ const Projects = () => {
         "Artefy is a dedicated platform for artists to showcase their work and connect with their audience. Built with Vue.js and Firebase, this portfolio application enables creative professionals to display their portfolios in a visually appealing interface while offering real-time communication features.",
       cta: "View here",
       link: "https://artefy-8085f.firebaseapp.com/",
+      github: "https://github.com/MingoMango17/artFiverr",
       image: "/artefy.png",
       tags: [
         "User Interface",
@@ -28,6 +30,7 @@ const Projects = () => {
         "PayCo is a comprehensive online payment system designed specifically for university tuition fees. Built for the UNO-R Portal, this application streamlines the financial transaction process between students and the university administration.",
       cta: "View here",
       link: "https://payco-uno-r.vercel.app/",
+      github: "https://github.com/MingoMango17/Exam_Permit",
       image: "/payco.png",
       tags: [
         "Figma",
@@ -64,9 +67,14 @@ const Projects = () => {
                   {project.name}
                 </h3>
                 <p className="text-gray-300 mb-4">{project.description}</p>
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md w-fit mb-6">
-                  <a href={project.link}>{project.cta}</a>
-                </button>
+                <div className="rounded-md w-fit mb-6 flex gap-2">
+                  <a href={project.github}>
+                    <Github size={20} />
+                  </a>
+                  <a href={project.link}>
+                    <ExternalLink size={20} />
+                  </a>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {project.tags.map((tag, i) => (
                     <span
