@@ -47,7 +47,7 @@ const Main = () => {
             <div className="w-64 h-80 object-cover relative z-10 rounded-md">
               <Image
                 className="w-64 h-80 object-cover relative z-10 rounded-md"
-                src="/unnamed.jpg"
+                src="/MINGO_JUNRY.jpg"
                 alt="Profile picture"
                 height={128}
                 width={160}
