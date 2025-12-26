@@ -13,6 +13,7 @@ const Skills = () => {
     { name: "Python", icon: "/python.png" },
     { name: "Tailwindcss", icon: "/tailwind.png" },
     { name: "Git", icon: "/git.png" },
+    { name: "NextJS", icon: "/nextjs.png" }
   ];
 
   return (

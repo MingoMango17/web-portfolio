@@ -60,6 +60,23 @@ const Projects = () => {
         "Git",
       ],
     },
+    {
+      id: 4,
+      name: "BiPay Attendance",
+      description: "A facial recognition-based attendance management system with integrated payroll tracking, built with modern web technologies and computer vision.",
+      cta: "View here",
+      link: "",
+      github: "https://github.com/MingoMango17/face-recognition-attendance-system",
+      image: "/face-recog.png",
+      tags: [
+        "ChromaDB",
+        "SQLite",
+        "Tailwindcss",
+        "React",
+        "Django",
+        "Git",
+      ]
+    }
   ];
 
   return (
