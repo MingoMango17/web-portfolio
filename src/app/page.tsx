@@ -8,6 +8,7 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { supabase } from "@/lib/supabase";
 import {
+  fallbackAbout,
   fallbackExperiences,
   fallbackProjects,
   fallbackSkills,
@@ -17,6 +18,7 @@ import {
 async function getData() {
   if (!supabase) {
     return {
+      about: fallbackAbout,
       projects: fallbackProjects,
       experiences: fallbackExperiences,
       skills: fallbackSkills,
@@ -25,7 +27,8 @@ async function getData() {
   }
 
   try {
-    const [projects, experiences, skills, tools] = await Promise.all([
+    const [about, projects, experiences, skills, tools] = await Promise.all([
+      supabase.from("about").select("*").eq("id", 1).single(),
       supabase.from("projects").select("*").order("order_index"),
       supabase.from("experiences").select("*").order("order_index"),
       supabase.from("skills").select("*").order("order_index"),
@@ -33,6 +36,7 @@ async function getData() {
     ]);
 
     return {
+      about: about.data ?? fallbackAbout,
       projects: projects.data?.length ? projects.data : fallbackProjects,
       experiences: experiences.data?.length ? experiences.data : fallbackExperiences,
       skills: skills.data?.length ? skills.data : fallbackSkills,
@@ -41,6 +45,7 @@ async function getData() {
   } catch (err) {
     console.error("[Supabase] Fetch error:", err);
     return {
+      about: fallbackAbout,
       projects: fallbackProjects,
       experiences: fallbackExperiences,
       skills: fallbackSkills,
@@ -50,13 +55,13 @@ async function getData() {
 }
 
 export default async function Home() {
-  const { projects, experiences, skills, tools } = await getData();
+  const { about, projects, experiences, skills, tools } = await getData();
 
   return (
     <main className="bg-black">
       <Nav />
       <Main />
-      <About />
+      <About about={about} />
       <Experience experiences={experiences} />
       <Skills skills={skills} tools={tools} />
       <Projects projects={projects} />

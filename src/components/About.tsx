@@ -1,7 +1,8 @@
 import React from "react";
 import BlurFade from "./BlurFade";
+import { AboutContent } from "@/types";
 
-const About = () => {
+const About = ({ about }: { about: AboutContent }) => {
   return (
     <section
       id="about"
@@ -20,20 +21,13 @@ const About = () => {
       <div className="grid md:grid-cols-2 gap-10 md:gap-20 mb-16">
         <BlurFade delay={0.2}>
           <p className="text-white/45 leading-relaxed text-base">
-            I&apos;m a passionate Full Stack Developer currently pursuing my
-            Bachelor&apos;s in Computer Science at the University of the
-            Philippines Cebu. I combine academic knowledge with hands-on
-            industry experience to build efficient, user-centered applications.
+            {about.paragraph1}
           </p>
         </BlurFade>
 
         <BlurFade delay={0.3}>
           <p className="text-white/45 leading-relaxed text-base">
-            My journey began as an intern at HQZen/BPOseats building a
-            full-stack kanban board with Vue.js and Django. Outside of work,
-            I&apos;m always exploring the latest in AI, machine learning, and
-            automotive engineering — interests that shape how I approach every
-            project I build.
+            {about.paragraph2}
           </p>
         </BlurFade>
       </div>

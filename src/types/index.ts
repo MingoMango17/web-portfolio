@@ -32,3 +32,9 @@ export type Tool = {
   icon: string;
   order_index: number;
 };
+
+export type AboutContent = {
+  id: number;
+  paragraph1: string;
+  paragraph2: string;
+};

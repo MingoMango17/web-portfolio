@@ -1,4 +1,12 @@
-import { Experience, Project, Skill, Tool } from "@/types";
+import { AboutContent, Experience, Project, Skill, Tool } from "@/types";
+
+export const fallbackAbout: AboutContent = {
+  id: 1,
+  paragraph1:
+    "I'm a passionate Full Stack Developer currently pursuing my Bachelor's in Computer Science at the University of the Philippines Cebu. I combine academic knowledge with hands-on industry experience to build efficient, user-centered applications.",
+  paragraph2:
+    "My journey began as an intern at HQZen/BPOseats building a full-stack kanban board with Vue.js and Django. Outside of work, I'm always exploring the latest in AI, machine learning, and automotive engineering — interests that shape how I approach every project I build.",
+};
 
 export const fallbackProjects: Project[] = [
   {

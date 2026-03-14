@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
 
 const navItems = [
+  { href: "/admin/about", label: "About" },
   { href: "/admin/projects", label: "Projects" },
   { href: "/admin/experience", label: "Experience" },
   { href: "/admin/skills", label: "Skills & Tools" },
