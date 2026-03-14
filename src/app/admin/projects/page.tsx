@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
+import { revalidateSite } from "@/lib/revalidate";
 import { Project } from "@/types";
 import { Pencil, Trash2, Plus, X } from "lucide-react";
 
@@ -79,12 +80,14 @@ export default function ProjectsAdmin() {
     setEditingId(null);
     setShowForm(false);
     setLoading(false);
+    await revalidateSite();
     fetch();
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this project?")) return;
     await supabase.from("projects").delete().eq("id", id);
+    await revalidateSite();
     fetch();
   };
 

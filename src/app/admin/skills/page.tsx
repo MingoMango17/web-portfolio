@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
+import { revalidateSite } from "@/lib/revalidate";
 import { Skill, Tool } from "@/types";
 import { Pencil, Trash2, Plus, X } from "lucide-react";
 
@@ -61,12 +62,14 @@ export default function SkillsAdmin() {
     setShowSkillForm(false);
     setEditingSkillId(null);
     setLoading(false);
+    await revalidateSite();
     fetchAll();
   };
 
   const deleteSkill = async (id: string) => {
     if (!confirm("Delete this skill?")) return;
     await supabase.from("skills").delete().eq("id", id);
+    await revalidateSite();
     fetchAll();
   };
 
@@ -95,12 +98,14 @@ export default function SkillsAdmin() {
     setShowToolForm(false);
     setEditingToolId(null);
     setLoading(false);
+    await revalidateSite();
     fetchAll();
   };
 
   const deleteTool = async (id: string) => {
     if (!confirm("Delete this tool?")) return;
     await supabase.from("tools").delete().eq("id", id);
+    await revalidateSite();
     fetchAll();
   };
 

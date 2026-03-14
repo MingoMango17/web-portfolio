@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase-browser";
+import { revalidateSite } from "@/lib/revalidate";
 import { Upload, Trash2, FileText, ExternalLink } from "lucide-react";
 
 const BUCKET = "resume";
@@ -52,6 +53,7 @@ export default function AdminResumePage() {
       notify("error", error.message);
     } else {
       await fetchResume();
+      await revalidateSite();
       notify("success", "Resume uploaded successfully.");
     }
 

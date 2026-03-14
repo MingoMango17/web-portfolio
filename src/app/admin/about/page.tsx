@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
+import { revalidateSite } from "@/lib/revalidate";
 import { AboutContent } from "@/types";
 
 const fallback: Omit<AboutContent, "id"> = {
@@ -29,6 +30,7 @@ export default function AboutAdmin() {
     e.preventDefault();
     setLoading(true);
     await supabase.from("about").upsert({ id: 1, ...form });
+    await revalidateSite();
     setLoading(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
