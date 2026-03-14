@@ -1,60 +1,30 @@
-// Nav.jsx
-"use client"
+"use client";
+
 import React from "react";
 import Link from "next/link";
 
 const Nav = () => {
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
-    <div className="w-full bg-[#030712] py-6">
-      <div className="max-w-6xl mx-auto flex justify-between items-center px-4">
-        <svg height="60" viewBox="0 0 160 60">
-          <text
-            y="37"
-            fontFamily="monospace"
-            fontSize="28"
-            fontWeight="bold"
-            fill="white"
-          >
-            {"<"}JM /{">"}
-          </text>
-        </svg>
-
-        <div className="flex gap-8 text-center items-center">
-          <span 
-            className="text-white cursor-pointer hover:text-gray-300"
-            onClick={() => scrollToSection("about")}
-          >
-            About
-          </span>
-          <span 
-            className="text-white cursor-pointer hover:text-gray-300"
-            onClick={() => scrollToSection("skills")}
-          >
-            Skills
-          </span>
-          <span 
-            className="text-white cursor-pointer hover:text-gray-300"
-            onClick={() => scrollToSection("projects")}
-          >
-            Projects
-          </span>
-          <Link 
-            href="/resume.pdf" 
-            download
-            className="bg-white text-[#030712] px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
-          >
-            Download Resume
-          </Link>
-        </div>
+    <nav className="fixed top-6 right-6 md:top-8 md:right-16 z-50">
+      <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/10 rounded-full px-4 py-2.5 text-sm">
+        <a
+          href="https://github.com/MingoMango17"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden md:block text-white/70 hover:text-white transition-colors duration-200"
+        >
+          Source Code
+        </a>
+        <span className="hidden md:block w-px h-4 bg-white/20" />
+        <Link
+          href="/resume.pdf"
+          download
+          className="bg-lime-400 hover:bg-lime-300 text-black font-semibold rounded-full px-4 py-1 transition-colors duration-200"
+        >
+          Download CV
+        </Link>
       </div>
-    </div>
+    </nav>
   );
 };
 
