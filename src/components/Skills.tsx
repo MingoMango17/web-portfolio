@@ -5,28 +5,7 @@ import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import BlurFade from "./BlurFade";
 
-const skills = [
-  { name: "JavaScript", level: 85 },
-  { name: "Python", level: 78 },
-  { name: "React / Vue", level: 82 },
-  { name: "Django", level: 80 },
-  { name: "PostgreSQL / MongoDB", level: 72 },
-  { name: "Next.js", level: 70 },
-];
-
-const tools = [
-  { name: "JavaScript", icon: "/icons8-javascript-48.png" },
-  { name: "Django", icon: "/django.png" },
-  { name: "React", icon: "/react.png" },
-  { name: "Vue", icon: "/vue.png" },
-  { name: "Firebase", icon: "/firebase.png" },
-  { name: "PostgreSQL", icon: "/postgres.png" },
-  { name: "MongoDB", icon: "/mongo.png" },
-  { name: "Python", icon: "/python.png" },
-  { name: "Tailwindcss", icon: "/tailwind.png" },
-  { name: "Git", icon: "/git.png" },
-  { name: "Next.js", icon: "/nextjs.png" },
-];
+import { Skill, Tool } from "@/types";
 
 const ProgressBar = ({
   name,
@@ -63,7 +42,7 @@ const ProgressBar = ({
   );
 };
 
-const Skills = () => {
+const Skills = ({ skills, tools }: { skills: Skill[]; tools: Tool[] }) => {
   return (
     <section
       id="skills"

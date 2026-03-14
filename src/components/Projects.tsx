@@ -2,51 +2,9 @@ import { ArrowUpRight, Github } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import BlurFade from "./BlurFade";
+import { Project } from "@/types";
 
-const projects = [
-  {
-    id: "01",
-    name: "Artefy",
-    description:
-      "A dedicated platform for artists to showcase their work and connect with their audience. Built with Vue.js and Firebase, enabling creative professionals to display portfolios with real-time communication features.",
-    link: "https://artefy-8085f.firebaseapp.com/",
-    github: "https://github.com/MingoMango17/artFiverr",
-    image: "/artefy.png",
-    tags: ["Vue.js", "Firebase", "Tailwind CSS"],
-  },
-  {
-    id: "02",
-    name: "Payco",
-    description:
-      "A comprehensive online payment system for university tuition fees. Built for the UNO-R Portal, streamlining financial transactions between students and university administration.",
-    link: "https://payco-uno-r.vercel.app/",
-    github: "https://github.com/MingoMango17/Exam_Permit",
-    image: "/payco.png",
-    tags: ["React", "MongoDB", "Tailwind CSS"],
-  },
-  {
-    id: "03",
-    name: "Kahayag",
-    description:
-      "A restaurant website prototype with a focus on clean UI/UX design. Built with React and designed in Figma, showcasing design-to-code workflow.",
-    link: "",
-    github: "https://github.com/MingoMango17/KahayagFE",
-    image: "/kahayag.png",
-    tags: ["React", "Tailwind CSS", "Figma"],
-  },
-  {
-    id: "04",
-    name: "BiPay Attendance",
-    description:
-      "A facial recognition-based attendance management system with integrated payroll tracking, built with modern web technologies and computer vision.",
-    link: "",
-    github: "https://github.com/MingoMango17/face-recognition-attendance-system",
-    image: "/face-recog.png",
-    tags: ["React", "Django", "ChromaDB"],
-  },
-];
-
-const Projects = () => {
+const Projects = ({ projects }: { projects: Project[] }) => {
   return (
     <section
       id="projects"
@@ -81,7 +39,7 @@ const Projects = () => {
                         className="text-4xl font-bold text-white/[0.06] select-none leading-none"
                         style={{ fontFamily: "var(--font-jetbrains-mono)" }}
                       >
-                        {project.id}
+                        {String(index + 1).padStart(2, "0")}
                       </span>
                       <h3 className="text-xl font-semibold text-white/80 group-hover:text-lime-400 transition-colors duration-200">
                         {project.name}

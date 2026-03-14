@@ -3,34 +3,9 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import BlurFade from "./BlurFade";
+import { Experience as ExperienceType } from "@/types";
 
-const experiences = [
-  {
-    company: "HQZen / BPOseats",
-    role: "Full Stack Developer Intern",
-    period: "July 2023 – Present",
-    initials: "HQ",
-    bullets: [
-      "Built a full-stack kanban board application using Vue.js and Django, used by internal teams.",
-      "Collaborated with senior developers across the entire development lifecycle.",
-      "Integrated REST APIs and managed PostgreSQL databases for production features.",
-      "Established Git workflows and best practices across the team.",
-    ],
-  },
-  {
-    company: "University of the Philippines Cebu",
-    role: "BS Computer Science",
-    period: "2020 – Present",
-    initials: "UP",
-    bullets: [
-      "Pursuing Bachelor of Science in Computer Science.",
-      "Developed multiple full-stack projects including facial recognition systems and payment platforms.",
-      "Applied machine learning and AI concepts in personal and academic projects.",
-    ],
-  },
-];
-
-const Experience = () => {
+const Experience = ({ experiences }: { experiences: ExperienceType[] }) => {
   const containerRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
