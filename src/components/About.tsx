@@ -1,39 +1,64 @@
 import React from "react";
+import BlurFade from "./BlurFade";
 
 const About = () => {
   return (
-    <div id="about" className="bg-[#111827] py-16">
-      <div className="max-w-4xl mx-auto px-4 flex flex-col items-center">
-        <div className="mb-6">
-          <div className="bg-[#374151] text-white rounded-lg px-4 py-2 text-center">
-            About me
-          </div>
-        </div>
+    <section
+      id="about"
+      className="max-w-5xl mx-auto px-6 md:px-12 py-24 border-t border-white/5"
+    >
+      <BlurFade delay={0.1}>
+        <p className="text-xs uppercase tracking-widest text-lime-400 mb-4 font-semibold">
+          About
+        </p>
+        <h2 className="text-4xl md:text-5xl font-bold mb-12 leading-tight">
+          A developer who loves{" "}
+          <span className="text-white/25">building things</span>
+        </h2>
+      </BlurFade>
 
-        <p className="text-white text-justify text-center max-w-200">
-          As a passionate Full Stack Developer currently pursuing my Bachelor&apos;s
-          in Computer Science at the University of the Philippines Cebu, I
-          combine academic knowledge with hands-on industry experience to build
-          efficient, user-centered applications.
-        </p>
-        <br />
-        <p className="text-white text-justify text-center max-w-200">
-          My development journey began as an intern at HQZen/BPOseats, where I
-          built a full-stack kanban board application using Vue.js and Django.
-          This experience laid the foundation for my understanding of the entire
-          development lifecycle and collaborative workflows using Git.
-        </p>
-        <br />
-        <p className="text-white text-justify text-center max-w-200">
-          My interests in video games, emerging technologies, and automotive
-          engineering inspire my approach to development—I believe in creating
-          solutions that are not just functional, but engaging and
-          forward-thinking. I&apos;m constantly learning and expanding my skillset,
-          always ready to tackle the next challenge with enthusiasm and
-          dedication.
-        </p>
+      <div className="grid md:grid-cols-2 gap-10 md:gap-20 mb-16">
+        <BlurFade delay={0.2}>
+          <p className="text-white/45 leading-relaxed text-base">
+            I&apos;m a passionate Full Stack Developer currently pursuing my
+            Bachelor&apos;s in Computer Science at the University of the
+            Philippines Cebu. I combine academic knowledge with hands-on
+            industry experience to build efficient, user-centered applications.
+          </p>
+        </BlurFade>
+
+        <BlurFade delay={0.3}>
+          <p className="text-white/45 leading-relaxed text-base">
+            My journey began as an intern at HQZen/BPOseats building a
+            full-stack kanban board with Vue.js and Django. Outside of work,
+            I&apos;m always exploring the latest in AI, machine learning, and
+            automotive engineering — interests that shape how I approach every
+            project I build.
+          </p>
+        </BlurFade>
       </div>
-    </div>
+
+      {/* Stats */}
+      <BlurFade delay={0.4}>
+        <div className="flex flex-wrap gap-12">
+          {[
+            { value: "2+", label: "Years experience" },
+            { value: "4+", label: "Projects shipped" },
+            { value: "11+", label: "Technologies" },
+          ].map((stat) => (
+            <div key={stat.label}>
+              <p
+                className="text-4xl font-bold text-lime-400 leading-none"
+                style={{ fontFamily: "var(--font-jetbrains-mono)" }}
+              >
+                {stat.value}
+              </p>
+              <p className="text-white/35 text-sm mt-2">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </BlurFade>
+    </section>
   );
 };
 

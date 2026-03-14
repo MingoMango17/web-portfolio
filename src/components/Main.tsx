@@ -1,7 +1,7 @@
 import { Github, Linkedin, MapPin } from "lucide-react";
 import React from "react";
-import Nav from "./Nav";
 import Image from "next/image";
+import BlurFade from "./BlurFade";
 
 const Main = () => {
   const startDate = new Date(2023, 6, 1);
@@ -16,61 +16,113 @@ const Main = () => {
   }
 
   return (
-    <div className="bg-[#030712]">
-      <Nav />
-      <div className="max-w-6xl mx-auto px-4 py-10">
-        <div className="flex flex-col md:flex-row justify-between gap-10">
-          <div className="flex flex-col gap-8 md:w-1/2">
-            <div className="flex flex-col gap-5">
-              <h1 className="font-bold text-5xl">Hi, I&apos;m Junry</h1>
-              <p className="text-gray-300">
-                I&apos;m a graduate of Bachelor of Science in Computer Science
-                and a Full Stack Web Developer (Django & Vue) with {years} year
-                {years > 1 && "s"}
-                {months > 0 &&
-                  ` and ${months} month${months > 1 && "s"} of experience`}
-                . I thrive at the intersection of creative problem-solving and
-                technical implementation. While having a full time job, I also
-                use my spare time on coding or developing projects that
-                implements Artificial Intelligence and Machine Learning.
-              </p>
-            </div>
+    <section className="min-h-screen flex items-center max-w-5xl mx-auto px-6 md:px-12 pt-24 pb-20">
+      <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-12 w-full">
 
-            <div className="flex flex-col gap-2">
-              <span className="flex items-center gap-2">
-                <MapPin size={18} />
-                <a href="https://www.google.com/maps/place/Cebu+City,+6000+Cebu/@10.3787539,123.7638937,36124m/data=!3m2!1e3!4b1!4m6!3m5!1s0x33a999258dcd2dfd:0x4c34030cdbd33507!8m2!3d10.3156992!4d123.8854366!16zL20vMDFwX2x5?entry=ttu&g_ep=EgoyMDI1MDMxMS4wIKXMDSoASAFQAw%3D%3D">
-                  <p>Cebu City, Cebu, Philippines</p>
-                </a>
+        {/* Left — text content */}
+        <div className="flex flex-col flex-1">
+          {/* Status badge */}
+          <BlurFade delay={0.1}>
+            <div className="flex items-center gap-2.5 mb-10">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-lime-400" />
               </span>
+              <span className="text-sm text-white/50">Available for work</span>
+            </div>
+          </BlurFade>
 
-              <div className="flex gap-4 mt-2">
-                <a href="https://github.com/MingoMango17">
-                  <Github className="cursor-pointer hover:text-gray-400 transition-colors" />
+          {/* Hi label */}
+          <BlurFade delay={0.2}>
+            <p className="text-white/40 text-lg mb-2 tracking-wide">Hi, I&apos;m</p>
+          </BlurFade>
+
+          {/* Name */}
+          <BlurFade delay={0.25}>
+            <h1
+              className="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-none tracking-tight mb-6"
+              style={{ fontFamily: "var(--font-jetbrains-mono)" }}
+            >
+              Junry Mingo
+            </h1>
+          </BlurFade>
+
+          {/* Title */}
+          <BlurFade delay={0.3}>
+            <h2 className="text-xl md:text-2xl font-medium text-white/60 mb-6">
+              Full Stack <span className="text-lime-400 font-semibold">Web Developer</span>
+            </h2>
+          </BlurFade>
+
+          {/* Description */}
+          <BlurFade delay={0.4}>
+            <p className="text-white/40 text-base leading-relaxed max-w-lg mb-12">
+              CS graduate with {years} year{years > 1 ? "s" : ""}
+              {months > 0 ? ` and ${months} month${months > 1 ? "s" : ""}` : ""} of
+              experience building full-stack applications. I thrive at the
+              intersection of creative problem-solving and technical implementation,
+              with a growing focus on AI & Machine Learning projects.
+            </p>
+          </BlurFade>
+
+          {/* Contact row */}
+          <BlurFade delay={0.5}>
+            <div className="flex flex-wrap items-center gap-5">
+              <a
+                href="https://www.google.com/maps/place/Cebu+City"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-white/40 hover:text-white/80 transition-colors duration-200 text-sm"
+              >
+                <MapPin size={14} className="text-lime-400" />
+                Cebu City, Philippines
+              </a>
+
+              <span className="w-px h-4 bg-white/15" />
+
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://github.com/MingoMango17"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 text-white/50 hover:text-lime-400 hover:border-lime-400/40 transition-all duration-200"
+                >
+                  <Github size={16} />
                 </a>
-                <a href="https://www.linkedin.com/in/junry-mingo-2bb819246/">
-                  <Linkedin className="cursor-pointer hover:text-gray-400 transition-colors" />
+                <a
+                  href="https://www.linkedin.com/in/junry-mingo-2bb819246/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 text-white/50 hover:text-lime-400 hover:border-lime-400/40 transition-all duration-200"
+                >
+                  <Linkedin size={16} />
                 </a>
               </div>
             </div>
-          </div>
+          </BlurFade>
+        </div>
 
-          <div className="relative h-80 w-64 self-center md:self-auto">
-            <div className="w-64 h-80 bg-gray-700 absolute right-4 bottom-4 translate-x-8 translate-y-8 rounded-md"></div>
-            <div className="w-64 h-80 object-cover relative z-10 rounded-md">
+        {/* Right — profile image */}
+        <BlurFade delay={0.35} className="flex-shrink-0">
+          <div className="relative w-56 h-72 md:w-64 md:h-80">
+            {/* Lime accent border */}
+            <div className="absolute inset-0 rounded-2xl border border-lime-400/20" />
+            {/* Offset lime block decoration */}
+            <div className="absolute -bottom-3 -right-3 w-full h-full rounded-2xl border border-lime-400/10" />
+            <div className="relative w-full h-full rounded-2xl overflow-hidden">
               <Image
-                className="w-64 h-80 object-cover relative z-10 rounded-md"
                 src="/MINGO_JUNRY.jpg"
-                alt="Profile picture"
-                height={128}
-                width={160}
+                alt="Junry Mingo"
+                fill
                 quality={100}
+                className="object-cover"
               />
             </div>
           </div>
-        </div>
+        </BlurFade>
+
       </div>
-    </div>
+    </section>
   );
 };
 
