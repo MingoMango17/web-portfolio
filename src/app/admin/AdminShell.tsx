@@ -10,6 +10,7 @@ const navItems = [
   { href: "/admin/experience", label: "Experience" },
   { href: "/admin/skills", label: "Skills & Tools" },
   { href: "/admin/resume", label: "Resume" },
+  { href: "/admin/visits", label: "Visits" },
 ];
 
 export default function AdminShell({

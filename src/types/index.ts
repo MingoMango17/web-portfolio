@@ -38,3 +38,16 @@ export type AboutContent = {
   paragraph1: string;
   paragraph2: string;
 };
+
+export type SiteVisit = {
+  id: string;
+  visited_at: string;
+  page: string;
+  country: string | null;
+  country_code: string | null;
+  city: string | null;
+  region: string | null;
+  ip_address: string | null;
+  user_agent: string | null;
+  referrer: string | null;
+};
