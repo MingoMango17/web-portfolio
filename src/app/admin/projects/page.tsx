@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase-browser";
 import { revalidateSite } from "@/lib/revalidate";
 import { Project } from "@/types";
-import { Pencil, Trash2, Plus, X } from "lucide-react";
+import { Pencil, Trash2, Plus, X, Upload, Loader2 } from "lucide-react";
 
 const empty = {
   name: "",
@@ -22,6 +23,8 @@ export default function ProjectsAdmin() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -54,6 +57,25 @@ export default function ProjectsAdmin() {
     });
     setEditingId(p.id);
     setShowForm(true);
+  };
+
+  const handleImageUpload = async (file: File) => {
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `${Date.now()}.${ext}`;
+    const { error } = await supabase.storage
+      .from("project-images")
+      .upload(path, file, { upsert: true });
+    if (error) {
+      alert("Upload failed: " + error.message);
+      setUploading(false);
+      return;
+    }
+    const { data } = supabase.storage
+      .from("project-images")
+      .getPublicUrl(path);
+    setForm((f) => ({ ...f, image: data.publicUrl }));
+    setUploading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -160,12 +182,56 @@ export default function ProjectsAdmin() {
                 placeholder="https://github.com/..."
               />
             </div>
-            <Field
-              label="Image path (e.g. /artefy.png)"
-              value={form.image}
-              onChange={(v) => setForm({ ...form, image: v })}
-              required
-            />
+            {/* Image upload */}
+            <div>
+              <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">
+                Image
+              </label>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="flex items-center gap-2 bg-white/[0.06] hover:bg-white/10 border border-white/10 text-white/60 hover:text-white text-sm px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {uploading ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <Upload size={14} />
+                  )}
+                  {uploading ? "Uploading…" : "Upload image"}
+                </button>
+                {form.image && (
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src={form.image}
+                      alt="preview"
+                      width={40}
+                      height={40}
+                      className="rounded object-cover w-10 h-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, image: "" })}
+                      className="text-white/30 hover:text-red-400 transition-colors"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleImageUpload(file);
+                  e.target.value = "";
+                }}
+              />
+            </div>
             <Field
               label="Tags (one per line)"
               value={form.tags}
