@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import { revalidateSite } from "@/lib/revalidate";
 import { Upload, Trash2, FileText, ExternalLink } from "lucide-react";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 const BUCKET = "resume";
 const FILE_NAME = "resume.pdf";
@@ -74,16 +75,17 @@ export default function AdminResumePage() {
 
   return (
     <div className="max-w-xl">
-      <h2 className="text-2xl font-bold text-white mb-1">Resume</h2>
-      <p className="text-white/40 text-sm mb-8">
+      <AdminPageHeader title="Resume" />
+      <p className="text-ink-muted text-sm mb-8 -mt-4">
         Upload a PDF to replace the downloadable CV on your portfolio.
       </p>
 
       {status && (
         <div
+          role={status.type === "error" ? "alert" : "status"}
           className={`mb-6 px-4 py-3 rounded-lg text-sm ${
             status.type === "success"
-              ? "bg-lime-400/10 text-lime-400 border border-lime-400/20"
+              ? "bg-accent/10 text-accent border border-accent/20"
               : "bg-red-400/10 text-red-400 border border-red-400/20"
           }`}
         >
@@ -92,17 +94,17 @@ export default function AdminResumePage() {
       )}
 
       {/* Current resume */}
-      <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6 mb-6">
-        <p className="text-xs uppercase tracking-widest text-white/30 mb-4">Current Resume</p>
+      <div className="glass rounded-xl p-6 mb-6">
+        <p className="text-xs uppercase tracking-widest text-ink-faint mb-4">Current Resume</p>
         {resumeUrl ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-lime-400/10 border border-lime-400/20 flex items-center justify-center">
-                <FileText size={18} className="text-lime-400" />
+              <div className="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+                <FileText size={18} className="text-accent" />
               </div>
               <div>
-                <p className="text-sm text-white font-medium">{FILE_NAME}</p>
-                <p className="text-xs text-white/30">PDF document</p>
+                <p className="text-sm text-ink font-medium">{FILE_NAME}</p>
+                <p className="text-xs text-ink-faint">PDF document</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -110,7 +112,7 @@ export default function AdminResumePage() {
                 href={resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white/50 hover:text-white border border-white/10 hover:border-white/20 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-ink-muted hover:text-ink border border-white/10 hover:border-white/25 transition-colors"
               >
                 <ExternalLink size={12} />
                 Preview
@@ -125,23 +127,23 @@ export default function AdminResumePage() {
             </div>
           </div>
         ) : (
-          <p className="text-white/25 text-sm">No resume uploaded yet.</p>
+          <p className="text-ink-faint text-sm">No resume uploaded yet.</p>
         )}
       </div>
 
       {/* Upload */}
       <div
         onClick={() => fileInputRef.current?.click()}
-        className="border border-dashed border-white/15 hover:border-lime-400/40 rounded-xl p-8 flex flex-col items-center gap-3 cursor-pointer transition-colors group"
+        className="border border-dashed border-white/15 hover:border-accent/40 rounded-xl p-8 flex flex-col items-center gap-3 cursor-pointer transition-colors group"
       >
-        <div className="w-12 h-12 rounded-full bg-white/5 group-hover:bg-lime-400/10 border border-white/10 group-hover:border-lime-400/20 flex items-center justify-center transition-colors">
-          <Upload size={20} className="text-white/30 group-hover:text-lime-400 transition-colors" />
+        <div className="w-12 h-12 rounded-full bg-white/5 group-hover:bg-accent/10 border border-white/10 group-hover:border-accent/20 flex items-center justify-center transition-colors">
+          <Upload size={20} className="text-ink-faint group-hover:text-accent transition-colors" />
         </div>
         <div className="text-center">
-          <p className="text-sm text-white/60 group-hover:text-white/80 transition-colors">
+          <p className="text-sm text-ink-muted group-hover:text-ink transition-colors">
             {uploading ? "Uploading…" : resumeUrl ? "Click to replace PDF" : "Click to upload PDF"}
           </p>
-          <p className="text-xs text-white/25 mt-1">PDF only</p>
+          <p className="text-xs text-ink-faint mt-1">PDF only</p>
         </div>
         <input
           ref={fileInputRef}

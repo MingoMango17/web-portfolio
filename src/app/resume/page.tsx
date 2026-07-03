@@ -11,12 +11,12 @@ export const metadata = {
 
 export default function ResumePage() {
   return (
-    <div className="fixed inset-0 bg-[#0a0a0a] flex flex-col">
+    <div className="fixed inset-0 bg-base flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-white/10 bg-black/40 backdrop-blur-sm">
+      <div className="flex items-center justify-between px-6 py-3 glass-strong border-x-0 border-t-0 rounded-none">
         <Link
           href="/"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white/60 hover:text-white border border-white/10 hover:border-white/20 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-ink-muted hover:text-ink border border-white/10 hover:border-white/25 bg-white/[0.03] transition-colors"
         >
           <ArrowLeft size={12} />
           Back

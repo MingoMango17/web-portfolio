@@ -5,6 +5,10 @@ import { createClient } from "@/lib/supabase-browser";
 import { revalidateSite } from "@/lib/revalidate";
 import { Experience } from "@/types";
 import { Pencil, Trash2, Plus, X } from "lucide-react";
+import Field from "@/components/admin/Field";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import SortableList from "@/components/admin/SortableList";
+import Button from "@/components/ui/Button";
 
 const empty = {
   company: "",
@@ -36,9 +40,22 @@ export default function ExperienceAdmin() {
   };
 
   const openAdd = () => {
-    setForm(empty);
+    setForm({ ...empty, order_index: experiences.length });
     setEditingId(null);
     setShowForm(true);
+  };
+
+  const handleReorder = (list: Experience[]) => {
+    setExperiences(list.map((exp, i) => ({ ...exp, order_index: i })));
+  };
+
+  const persistOrder = async () => {
+    await Promise.all(
+      experiences.map((exp, i) =>
+        supabase.from("experiences").update({ order_index: i }).eq("id", exp.id)
+      )
+    );
+    await revalidateSite();
   };
 
   const openEdit = (e: Experience) => {
@@ -90,31 +107,26 @@ export default function ExperienceAdmin() {
 
   return (
     <div className="max-w-4xl">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-lime-400 font-semibold mb-1">
-            Manage
-          </p>
-          <h1 className="text-2xl font-bold text-white">Experience</h1>
-        </div>
-        <button
-          onClick={openAdd}
-          className="flex items-center gap-2 bg-lime-400 hover:bg-lime-300 text-black text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-        >
-          <Plus size={15} />
-          Add Entry
-        </button>
-      </div>
+      <AdminPageHeader
+        title="Experience"
+        action={
+          <Button onClick={openAdd}>
+            <Plus size={15} />
+            Add Entry
+          </Button>
+        }
+      />
 
       {showForm && (
-        <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6 mb-8">
+        <div className="glass-strong rounded-xl p-6 mb-8">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-white font-semibold">
+            <h2 className="text-ink font-semibold">
               {editingId ? "Edit Entry" : "New Entry"}
             </h2>
             <button
               onClick={() => setShowForm(false)}
-              className="text-white/30 hover:text-white/60 transition-colors"
+              aria-label="Close form"
+              className="text-ink-faint hover:text-ink-muted transition-colors"
             >
               <X size={18} />
             </button>
@@ -135,7 +147,7 @@ export default function ExperienceAdmin() {
                 required
               />
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <Field
                 label="Period"
                 value={form.period}
@@ -150,33 +162,24 @@ export default function ExperienceAdmin() {
                 placeholder="HQ"
                 required
               />
-              <Field
-                label="Order Index"
-                type="number"
-                value={String(form.order_index)}
-                onChange={(v) => setForm({ ...form, order_index: Number(v) })}
-              />
             </div>
             <Field
               label="Bullet points (one per line)"
               value={form.bullets}
               onChange={(v) => setForm({ ...form, bullets: v })}
               multiline
+              rows={4}
               placeholder={"Built a kanban board with Vue.js and Django.\nCollaborated with senior developers."}
               required
             />
             <div className="flex gap-3 pt-2">
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-lime-400 hover:bg-lime-300 text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
-              >
+              <Button type="submit" disabled={loading}>
                 {loading ? "Saving…" : editingId ? "Save Changes" : "Create"}
-              </button>
+              </Button>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="text-white/40 hover:text-white text-sm transition-colors"
+                className="text-ink-muted hover:text-ink text-sm transition-colors"
               >
                 Cancel
               </button>
@@ -185,92 +188,49 @@ export default function ExperienceAdmin() {
         </div>
       )}
 
-      <div className="space-y-3">
-        {experiences.map((exp) => (
-          <div
-            key={exp.id}
-            className="flex items-start justify-between gap-4 bg-white/[0.03] border border-white/8 rounded-xl px-5 py-4 hover:border-white/15 transition-colors"
-          >
+      <SortableList
+        items={experiences}
+        onReorder={handleReorder}
+        onDragEnd={persistOrder}
+        getKey={(exp) => exp.id}
+        className="space-y-3"
+        renderItem={(exp) => (
+          <div className="flex items-start justify-between gap-4 glass rounded-xl px-5 py-4 hover:border-white/20 transition-colors">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-xs text-white/20 font-mono">
+                <span className="text-xs text-ink-faint font-mono">
                   #{exp.order_index}
                 </span>
-                <h3 className="text-white font-medium text-sm">
+                <h3 className="text-ink font-medium text-sm">
                   {exp.company}
                 </h3>
               </div>
-              <p className="text-lime-400/60 text-xs mb-1">{exp.role}</p>
-              <p className="text-white/25 text-xs">{exp.period}</p>
+              <p className="text-accent/70 text-xs mb-1">{exp.role}</p>
+              <p className="text-ink-faint text-xs">{exp.period}</p>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <button
                 onClick={() => openEdit(exp)}
-                className="p-2 rounded-lg text-white/30 hover:text-lime-400 hover:bg-lime-400/10 transition-all duration-200"
+                aria-label={`Edit ${exp.company}`}
+                className="p-2 rounded-lg text-ink-faint hover:text-accent hover:bg-accent/10 transition-all duration-200"
               >
                 <Pencil size={14} />
               </button>
               <button
                 onClick={() => handleDelete(exp.id)}
-                className="p-2 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-400/10 transition-all duration-200"
+                aria-label={`Delete ${exp.company}`}
+                className="p-2 rounded-lg text-ink-faint hover:text-red-400 hover:bg-red-400/10 transition-all duration-200"
               >
                 <Trash2 size={14} />
               </button>
             </div>
           </div>
-        ))}
-        {experiences.length === 0 && (
-          <p className="text-white/20 text-sm text-center py-12">
-            No entries yet.
-          </p>
         )}
-      </div>
-    </div>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-  type = "text",
-  multiline = false,
-  placeholder = "",
-  required = false,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-  multiline?: boolean;
-  placeholder?: string;
-  required?: boolean;
-}) {
-  const base =
-    "w-full bg-black border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors placeholder:text-white/20";
-  return (
-    <div>
-      <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">
-        {label}
-      </label>
-      {multiline ? (
-        <textarea
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={`${base} resize-none`}
-          rows={4}
-          placeholder={placeholder}
-          required={required}
-        />
-      ) : (
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={base}
-          placeholder={placeholder}
-          required={required}
-        />
+      />
+      {experiences.length === 0 && (
+        <p className="text-ink-faint text-sm text-center py-12">
+          No entries yet.
+        </p>
       )}
     </div>
   );

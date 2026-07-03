@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import { revalidateSite } from "@/lib/revalidate";
 import { AboutContent } from "@/types";
+import Field from "@/components/admin/Field";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import Button from "@/components/ui/Button";
 
 const fallback: Omit<AboutContent, "id"> = {
   paragraph1:
@@ -36,56 +39,38 @@ export default function AboutAdmin() {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const base =
-    "w-full bg-black border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors placeholder:text-white/20 resize-none";
-
   return (
     <div className="max-w-2xl">
-      <div className="mb-8">
-        <p className="text-xs uppercase tracking-widest text-lime-400 font-semibold mb-1">
-          Manage
-        </p>
-        <h1 className="text-2xl font-bold text-white">About</h1>
-      </div>
+      <AdminPageHeader title="About" />
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white/[0.03] border border-white/10 rounded-xl p-6 space-y-5"
+        className="glass-strong rounded-xl p-6 space-y-5"
       >
-        <div>
-          <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">
-            Paragraph 1
-          </label>
-          <textarea
-            rows={5}
-            className={base}
-            value={form.paragraph1}
-            onChange={(e) => setForm({ ...form, paragraph1: e.target.value })}
-            required
-          />
-        </div>
-        <div>
-          <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">
-            Paragraph 2
-          </label>
-          <textarea
-            rows={5}
-            className={base}
-            value={form.paragraph2}
-            onChange={(e) => setForm({ ...form, paragraph2: e.target.value })}
-            required
-          />
-        </div>
+        <Field
+          label="Paragraph 1"
+          value={form.paragraph1}
+          onChange={(v) => setForm({ ...form, paragraph1: v })}
+          multiline
+          rows={5}
+          required
+        />
+        <Field
+          label="Paragraph 2"
+          value={form.paragraph2}
+          onChange={(v) => setForm({ ...form, paragraph2: v })}
+          multiline
+          rows={5}
+          required
+        />
         <div className="flex items-center gap-4 pt-1">
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-lime-400 hover:bg-lime-300 text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
-          >
+          <Button type="submit" disabled={loading}>
             {loading ? "Saving…" : "Save Changes"}
-          </button>
+          </Button>
           {saved && (
-            <span className="text-lime-400 text-sm">Saved!</span>
+            <span role="status" className="text-accent text-sm">
+              Saved!
+            </span>
           )}
         </div>
       </form>

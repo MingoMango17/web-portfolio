@@ -6,6 +6,11 @@ import { createClient } from "@/lib/supabase-browser";
 import { revalidateSite } from "@/lib/revalidate";
 import { Project } from "@/types";
 import { Pencil, Trash2, Plus, X, Upload, Loader2 } from "lucide-react";
+import Field from "@/components/admin/Field";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import SortableList from "@/components/admin/SortableList";
+import Button from "@/components/ui/Button";
+import Tag from "@/components/ui/Tag";
 
 const empty = {
   name: "",
@@ -40,9 +45,22 @@ export default function ProjectsAdmin() {
   };
 
   const openAdd = () => {
-    setForm(empty);
+    setForm({ ...empty, order_index: projects.length });
     setEditingId(null);
     setShowForm(true);
+  };
+
+  const handleReorder = (list: Project[]) => {
+    setProjects(list.map((p, i) => ({ ...p, order_index: i })));
+  };
+
+  const persistOrder = async () => {
+    await Promise.all(
+      projects.map((p, i) =>
+        supabase.from("projects").update({ order_index: i }).eq("id", p.id)
+      )
+    );
+    await revalidateSite();
   };
 
   const openEdit = (p: Project) => {
@@ -115,52 +133,39 @@ export default function ProjectsAdmin() {
 
   return (
     <div className="max-w-4xl">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <p className="text-xs uppercase tracking-widest text-lime-400 font-semibold mb-1">
-            Manage
-          </p>
-          <h1 className="text-2xl font-bold text-white">Projects</h1>
-        </div>
-        <button
-          onClick={openAdd}
-          className="flex items-center gap-2 bg-lime-400 hover:bg-lime-300 text-black text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-        >
-          <Plus size={15} />
-          Add Project
-        </button>
-      </div>
+      <AdminPageHeader
+        title="Projects"
+        action={
+          <Button onClick={openAdd}>
+            <Plus size={15} />
+            Add Project
+          </Button>
+        }
+      />
 
       {/* Form */}
       {showForm && (
-        <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6 mb-8">
+        <div className="glass-strong rounded-xl p-6 mb-8">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-white font-semibold">
+            <h2 className="text-ink font-semibold">
               {editingId ? "Edit Project" : "New Project"}
             </h2>
             <button
               onClick={() => setShowForm(false)}
-              className="text-white/30 hover:text-white/60 transition-colors"
+              aria-label="Close form"
+              className="text-ink-faint hover:text-ink-muted transition-colors"
             >
               <X size={18} />
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <Field
-                label="Name"
-                value={form.name}
-                onChange={(v) => setForm({ ...form, name: v })}
-                required
-              />
-              <Field
-                label="Order Index"
-                type="number"
-                value={String(form.order_index)}
-                onChange={(v) => setForm({ ...form, order_index: Number(v) })}
-              />
-            </div>
+            <Field
+              label="Name"
+              value={form.name}
+              onChange={(v) => setForm({ ...form, name: v })}
+              required
+            />
             <Field
               label="Description"
               value={form.description}
@@ -184,7 +189,7 @@ export default function ProjectsAdmin() {
             </div>
             {/* Image upload */}
             <div>
-              <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">
+              <label className="text-xs text-ink-faint uppercase tracking-widest block mb-1.5">
                 Image
               </label>
               <div className="flex items-center gap-3">
@@ -192,7 +197,7 @@ export default function ProjectsAdmin() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="flex items-center gap-2 bg-white/[0.06] hover:bg-white/10 border border-white/10 text-white/60 hover:text-white text-sm px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                  className="flex items-center gap-2 bg-white/[0.06] hover:bg-white/10 border border-white/10 text-ink-muted hover:text-ink text-sm px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
                 >
                   {uploading ? (
                     <Loader2 size={14} className="animate-spin" />
@@ -205,7 +210,7 @@ export default function ProjectsAdmin() {
                   <div className="flex items-center gap-2">
                     <Image
                       src={form.image}
-                      alt="preview"
+                      alt={`${form.name} preview`}
                       width={40}
                       height={40}
                       className="rounded object-cover w-10 h-10"
@@ -213,7 +218,8 @@ export default function ProjectsAdmin() {
                     <button
                       type="button"
                       onClick={() => setForm({ ...form, image: "" })}
-                      className="text-white/30 hover:text-red-400 transition-colors"
+                      aria-label="Remove image"
+                      className="text-ink-faint hover:text-red-400 transition-colors"
                     >
                       <X size={14} />
                     </button>
@@ -240,17 +246,13 @@ export default function ProjectsAdmin() {
               placeholder={"Vue.js\nFirebase\nTailwind CSS"}
             />
             <div className="flex gap-3 pt-2">
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-lime-400 hover:bg-lime-300 text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
-              >
+              <Button type="submit" disabled={loading}>
                 {loading ? "Saving…" : editingId ? "Save Changes" : "Create"}
-              </button>
+              </Button>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="text-white/40 hover:text-white text-sm transition-colors"
+                className="text-ink-muted hover:text-ink text-sm transition-colors"
               >
                 Cancel
               </button>
@@ -260,102 +262,58 @@ export default function ProjectsAdmin() {
       )}
 
       {/* List */}
-      <div className="space-y-3">
-        {projects.map((p) => (
-          <div
-            key={p.id}
-            className="flex items-start justify-between gap-4 bg-white/[0.03] border border-white/8 rounded-xl px-5 py-4 group hover:border-white/15 transition-colors"
-          >
+      <SortableList
+        items={projects}
+        onReorder={handleReorder}
+        onDragEnd={persistOrder}
+        getKey={(p) => p.id}
+        className="space-y-3"
+        renderItem={(p) => (
+          <div className="flex items-start justify-between gap-4 glass rounded-xl px-5 py-4 group hover:border-white/20 transition-colors">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs text-white/20 font-mono">
+                <span className="text-xs text-ink-faint font-mono">
                   #{p.order_index}
                 </span>
-                <h3 className="text-white font-medium text-sm">{p.name}</h3>
+                <h3 className="text-ink font-medium text-sm">{p.name}</h3>
               </div>
-              <p className="text-white/35 text-xs line-clamp-1 mb-2">
+              <p className="text-ink-muted text-xs line-clamp-1 mb-2">
                 {p.description}
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {p.tags.map((t) => (
-                  <span
-                    key={t}
-                    className="text-[10px] text-white/30 border border-white/8 rounded-full px-2 py-0.5"
-                  >
+                  <Tag key={t} className="text-[10px] px-2 py-0.5">
                     {t}
-                  </span>
+                  </Tag>
                 ))}
               </div>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <button
                 onClick={() => openEdit(p)}
-                className="p-2 rounded-lg text-white/30 hover:text-lime-400 hover:bg-lime-400/10 transition-all duration-200"
+                aria-label={`Edit ${p.name}`}
+                className="p-2 rounded-lg text-ink-faint hover:text-accent hover:bg-accent/10 transition-all duration-200"
               >
                 <Pencil size={14} />
               </button>
               <button
                 onClick={() => handleDelete(p.id)}
-                className="p-2 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-400/10 transition-all duration-200"
+                aria-label={`Delete ${p.name}`}
+                className="p-2 rounded-lg text-ink-faint hover:text-red-400 hover:bg-red-400/10 transition-all duration-200"
               >
                 <Trash2 size={14} />
               </button>
             </div>
           </div>
-        ))}
+        )}
+      />
+      <div>
         {projects.length === 0 && (
-          <p className="text-white/20 text-sm text-center py-12">
+          <p className="text-ink-faint text-sm text-center py-12">
             No projects yet. Add your first one.
           </p>
         )}
       </div>
-    </div>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-  type = "text",
-  multiline = false,
-  placeholder = "",
-  required = false,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-  multiline?: boolean;
-  placeholder?: string;
-  required?: boolean;
-}) {
-  const base =
-    "w-full bg-black border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors placeholder:text-white/20";
-  return (
-    <div>
-      <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">
-        {label}
-      </label>
-      {multiline ? (
-        <textarea
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={`${base} resize-none`}
-          rows={3}
-          placeholder={placeholder}
-          required={required}
-        />
-      ) : (
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={base}
-          placeholder={placeholder}
-          required={required}
-        />
-      )}
     </div>
   );
 }

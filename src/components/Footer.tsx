@@ -1,19 +1,20 @@
 import React from "react";
+import { SITE_GITHUB } from "@/lib/site";
 
 const Footer = () => {
   return (
-    <footer className="h-screen w-full flex flex-col items-center justify-center border-t border-white/5 relative">
+    <footer className="min-h-[60vh] md:min-h-screen w-full flex flex-col items-center justify-center border-t border-white/10 relative">
       <p
-        className="text-4xl md:text-6xl font-thin text-white/20 tracking-widest text-center px-6"
+        className="text-4xl md:text-6xl font-thin text-ink-faint tracking-widest text-center px-6"
         style={{ fontFamily: "var(--font-jetbrains-mono)" }}
       >
         Thank you :)
       </p>
       <a
-        href="https://github.com/MingoMango17"
+        href={SITE_GITHUB}
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute bottom-10 text-white/25 hover:text-white/60 text-sm transition-colors duration-200"
+        className="absolute bottom-10 text-ink-faint hover:text-ink text-sm transition-colors duration-200"
       >
         github.com/MingoMango17
       </a>

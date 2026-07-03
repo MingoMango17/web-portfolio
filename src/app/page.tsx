@@ -58,7 +58,7 @@ export default async function Home() {
   const { about, projects, experiences, skills, tools } = await getData();
 
   return (
-    <main className="bg-black">
+    <main id="main-content" className="relative">
       <Nav />
       <Main />
       <About about={about} />

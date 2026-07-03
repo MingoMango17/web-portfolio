@@ -2,6 +2,7 @@ import { Github, Linkedin, MapPin } from "lucide-react";
 import React from "react";
 import Image from "next/image";
 import BlurFade from "./BlurFade";
+import { SITE_GITHUB, SITE_LINKEDIN } from "@/lib/site";
 
 const Main = () => {
   const startDate = new Date(2023, 6, 1);
@@ -25,20 +26,20 @@ const Main = () => {
           <BlurFade delay={0.1}>
             <div className="flex items-center gap-2.5 mb-10">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-lime-400" />
+                <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent" />
               </span>
-              <span className="text-sm text-white/50">Available for work</span>
+              <span className="text-sm text-ink-muted">Available for work</span>
             </div>
           </BlurFade>
 
           {/* Hi label */}
-          <BlurFade delay={0.2}>
-            <p className="text-white/40 text-lg mb-2 tracking-wide">Hi, I&apos;m</p>
+          <BlurFade delay={0.2} blur>
+            <p className="text-ink-muted text-lg mb-2 tracking-wide">Hi, I&apos;m</p>
           </BlurFade>
 
           {/* Name */}
-          <BlurFade delay={0.25}>
+          <BlurFade delay={0.25} blur>
             <h1
               className="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-none tracking-tight mb-6"
               style={{ fontFamily: "var(--font-jetbrains-mono)" }}
@@ -48,15 +49,15 @@ const Main = () => {
           </BlurFade>
 
           {/* Title */}
-          <BlurFade delay={0.3}>
-            <h2 className="text-xl md:text-2xl font-medium text-white/60 mb-6">
-              Full Stack <span className="text-lime-400 font-semibold">Web Developer</span>
+          <BlurFade delay={0.3} blur>
+            <h2 className="text-xl md:text-2xl font-medium text-ink-muted mb-6">
+              Full Stack <span className="text-accent font-semibold">Web Developer</span>
             </h2>
           </BlurFade>
 
           {/* Description */}
-          <BlurFade delay={0.4}>
-            <p className="text-white/40 text-base leading-relaxed max-w-lg mb-12">
+          <BlurFade delay={0.4} blur>
+            <p className="text-ink-muted text-base leading-relaxed max-w-lg mb-12">
               CS graduate with {years} year{years > 1 ? "s" : ""}
               {months > 0 ? ` and ${months} month${months > 1 ? "s" : ""}` : ""} of
               experience building full-stack applications. I thrive at the
@@ -72,9 +73,9 @@ const Main = () => {
                 href="https://www.google.com/maps/place/Cebu+City"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white/40 hover:text-white/80 transition-colors duration-200 text-sm"
+                className="flex items-center gap-2 text-ink-faint hover:text-ink transition-colors duration-200 text-sm"
               >
-                <MapPin size={14} className="text-lime-400" />
+                <MapPin size={14} className="text-accent" />
                 Cebu City, Philippines
               </a>
 
@@ -82,18 +83,20 @@ const Main = () => {
 
               <div className="flex items-center gap-3">
                 <a
-                  href="https://github.com/MingoMango17"
+                  href={SITE_GITHUB}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 text-white/50 hover:text-lime-400 hover:border-lime-400/40 transition-all duration-200"
+                  aria-label="GitHub profile"
+                  className="flex items-center justify-center w-9 h-9 rounded-full glass text-ink-muted hover:text-accent hover:border-accent/40 transition-all duration-200"
                 >
                   <Github size={16} />
                 </a>
                 <a
-                  href="https://www.linkedin.com/in/junry-mingo-2bb819246/"
+                  href={SITE_LINKEDIN}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 text-white/50 hover:text-lime-400 hover:border-lime-400/40 transition-all duration-200"
+                  aria-label="LinkedIn profile"
+                  className="flex items-center justify-center w-9 h-9 rounded-full glass text-ink-muted hover:text-accent hover:border-accent/40 transition-all duration-200"
                 >
                   <Linkedin size={16} />
                 </a>
@@ -105,18 +108,26 @@ const Main = () => {
         {/* Right — profile image */}
         <BlurFade delay={0.35} className="flex-shrink-0">
           <div className="relative w-56 h-72 md:w-64 md:h-80">
-            {/* Lime accent border */}
-            <div className="absolute inset-0 rounded-2xl border border-lime-400/20" />
-            {/* Offset lime block decoration */}
-            <div className="absolute -bottom-3 -right-3 w-full h-full rounded-2xl border border-lime-400/10" />
-            <div className="relative w-full h-full rounded-2xl overflow-hidden">
-              <Image
-                src="/MINGO_JUNRY.jpg"
-                alt="Junry Mingo"
-                fill
-                quality={100}
-                className="object-cover"
-              />
+            {/* Lime radial glow behind portrait */}
+            <div
+              aria-hidden="true"
+              className="absolute -inset-10 -z-10"
+              style={{
+                background:
+                  "radial-gradient(circle, rgb(163 230 53 / 0.14) 0%, transparent 70%)",
+              }}
+            />
+            {/* Glass frame */}
+            <div className="glass rounded-2xl p-2 w-full h-full">
+              <div className="relative w-full h-full rounded-xl overflow-hidden">
+                <Image
+                  src="/MINGO_JUNRY.jpg"
+                  alt="Junry Mingo"
+                  fill
+                  quality={100}
+                  className="object-cover"
+                />
+              </div>
             </div>
           </div>
         </BlurFade>

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import { useRouter } from "next/navigation";
+import Field from "@/components/admin/Field";
+import Button from "@/components/ui/Button";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -32,63 +34,55 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <p className="text-xs uppercase tracking-widest text-lime-400 font-semibold mb-2">
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-sm glass-strong rounded-2xl p-8">
+        <p className="text-xs uppercase tracking-widest text-accent font-semibold mb-2">
           Portfolio
         </p>
         <h1
-          className="text-3xl font-bold text-white mb-1"
+          className="text-3xl font-bold text-ink mb-1"
           style={{ fontFamily: "var(--font-jetbrains-mono)" }}
         >
           Admin CMS
         </h1>
-        <p className="text-white/30 text-sm mb-10">
+        <p className="text-ink-faint text-sm mb-10">
           Sign in to manage your portfolio content
         </p>
 
         <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="text-xs text-white/30 uppercase tracking-widest block mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors"
-              placeholder="you@email.com"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="text-xs text-white/30 uppercase tracking-widest block mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors"
-              placeholder="••••••••"
-              required
-            />
-          </div>
+          <Field
+            label="Email"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            placeholder="you@email.com"
+            required
+          />
+          <Field
+            label="Password"
+            type="password"
+            value={password}
+            onChange={setPassword}
+            placeholder="••••••••"
+            required
+          />
 
           {error && (
-            <p className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3">
+            <p
+              role="alert"
+              className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3"
+            >
               {error}
             </p>
           )}
 
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-lime-400 hover:bg-lime-300 text-black font-semibold py-3 rounded-lg transition-colors disabled:opacity-50 mt-2"
+            className="w-full justify-center py-3 mt-2"
           >
             {loading ? "Signing in…" : "Sign In"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

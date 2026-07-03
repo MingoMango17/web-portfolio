@@ -21,7 +21,11 @@ export default function VisitTracker() {
         page: pathname,
         referrer: document.referrer || null,
       }),
-    }).catch(() => {});
+    }).catch((err) => {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[VisitTracker] track request failed:", err);
+      }
+    });
   }, [pathname]);
 
   return null;

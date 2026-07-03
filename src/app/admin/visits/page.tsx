@@ -1,10 +1,9 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-browser";
 import { SiteVisit } from "@/types";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 type CountryCount = { country: string; country_code: string | null; count: number };
 
@@ -68,12 +67,7 @@ export default function VisitsAdmin() {
 
   return (
     <div className="max-w-5xl">
-      <div className="mb-8">
-        <p className="text-xs uppercase tracking-widest text-lime-400 font-semibold mb-1">
-          Analytics
-        </p>
-        <h1 className="text-2xl font-bold text-white">Site Visits</h1>
-      </div>
+      <AdminPageHeader eyebrow="Analytics" title="Site Visits" />
 
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-4 mb-8">
@@ -84,14 +78,14 @@ export default function VisitsAdmin() {
 
       <div className="grid grid-cols-3 gap-6">
         {/* Countries breakdown */}
-        <div className="bg-white/[0.03] border border-white/10 rounded-xl p-5">
-          <h2 className="text-xs uppercase tracking-widest text-white/30 font-semibold mb-4">
+        <div className="glass rounded-xl p-5">
+          <h2 className="text-xs uppercase tracking-widest text-ink-faint font-semibold mb-4">
             By Country
           </h2>
           {loading ? (
-            <p className="text-white/20 text-sm">Loading…</p>
+            <p className="text-ink-faint text-sm">Loading…</p>
           ) : topCountries.length === 0 ? (
-            <p className="text-white/20 text-sm">No data yet</p>
+            <p className="text-ink-faint text-sm">No data yet</p>
           ) : (
             <div className="space-y-2">
               {topCountries.map((c) => {
@@ -99,17 +93,21 @@ export default function VisitsAdmin() {
                 return (
                   <div key={c.country}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-white/70 flex items-center gap-2">
+                      <span className="text-sm text-ink-muted flex items-center gap-2">
                         <span>{flagEmoji(c.country_code)}</span>
                         <span className="truncate max-w-[110px]">{c.country}</span>
                       </span>
-                      <span className="text-xs text-white/30 font-mono">
+                      <span className="text-xs text-ink-faint font-mono">
                         {c.count}
                       </span>
                     </div>
-                    <div className="h-1 bg-white/5 rounded-full">
+                    <div
+                      className="h-1 bg-white/5 rounded-full"
+                      role="img"
+                      aria-label={`${c.country}: ${c.count} visits (${pct}%)`}
+                    >
                       <div
-                        className="h-1 bg-lime-400 rounded-full transition-all"
+                        className="h-1 bg-accent rounded-full transition-all"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -121,34 +119,37 @@ export default function VisitsAdmin() {
         </div>
 
         {/* Recent visits table */}
-        <div className="col-span-2 bg-white/[0.03] border border-white/10 rounded-xl p-5">
+        <div className="col-span-2 glass rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xs uppercase tracking-widest text-white/30 font-semibold">
+            <h2 className="text-xs uppercase tracking-widest text-ink-faint font-semibold">
               Recent Visits
             </h2>
             <button
               onClick={loadVisits}
-              className="text-xs text-white/30 hover:text-white/60 transition-colors"
+              className="text-xs text-ink-faint hover:text-ink-muted transition-colors"
             >
               Refresh
             </button>
           </div>
 
           {loading ? (
-            <p className="text-white/20 text-sm">Loading…</p>
+            <p className="text-ink-faint text-sm">Loading…</p>
           ) : visits.length === 0 ? (
-            <p className="text-white/20 text-sm text-center py-10">
+            <p className="text-ink-faint text-sm text-center py-10">
               No visits recorded yet.
             </p>
           ) : (
             <div className="overflow-auto max-h-[520px]">
               <table className="w-full text-sm">
+                <caption className="sr-only">
+                  Recent site visits with time, page, location, and referrer
+                </caption>
                 <thead>
-                  <tr className="text-left text-xs text-white/20 uppercase tracking-widest border-b border-white/5">
-                    <th className="pb-3 pr-4 font-medium">Time</th>
-                    <th className="pb-3 pr-4 font-medium">Page</th>
-                    <th className="pb-3 pr-4 font-medium">Location</th>
-                    <th className="pb-3 font-medium">Referrer</th>
+                  <tr className="text-left text-xs text-ink-faint uppercase tracking-widest border-b border-white/5">
+                    <th scope="col" className="pb-3 pr-4 font-medium">Time</th>
+                    <th scope="col" className="pb-3 pr-4 font-medium">Page</th>
+                    <th scope="col" className="pb-3 pr-4 font-medium">Location</th>
+                    <th scope="col" className="pb-3 font-medium">Referrer</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -157,13 +158,13 @@ export default function VisitsAdmin() {
                       key={v.id}
                       className="hover:bg-white/[0.02] transition-colors"
                     >
-                      <td className="py-2.5 pr-4 text-white/40 font-mono text-xs whitespace-nowrap">
+                      <td className="py-2.5 pr-4 text-ink-faint font-mono text-xs whitespace-nowrap">
                         {formatDate(v.visited_at)}
                       </td>
-                      <td className="py-2.5 pr-4 text-white/70 font-mono text-xs">
+                      <td className="py-2.5 pr-4 text-ink-muted font-mono text-xs">
                         {v.page}
                       </td>
-                      <td className="py-2.5 pr-4 text-white/50 text-xs whitespace-nowrap">
+                      <td className="py-2.5 pr-4 text-ink-muted text-xs whitespace-nowrap">
                         {v.country ? (
                           <span className="flex items-center gap-1.5">
                             <span>{flagEmoji(v.country_code)}</span>
@@ -173,14 +174,14 @@ export default function VisitsAdmin() {
                             </span>
                           </span>
                         ) : (
-                          <span className="text-white/20">—</span>
+                          <span className="text-ink-faint">—</span>
                         )}
                       </td>
-                      <td className="py-2.5 text-white/30 text-xs max-w-[160px] truncate">
+                      <td className="py-2.5 text-ink-faint text-xs max-w-[160px] truncate">
                         {v.referrer ? (
                           <span title={v.referrer}>{v.referrer}</span>
                         ) : (
-                          <span className="text-white/15">direct</span>
+                          <span className="text-ink-faint/60">direct</span>
                         )}
                       </td>
                     </tr>
@@ -197,11 +198,11 @@ export default function VisitsAdmin() {
 
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
-    <div className="bg-white/[0.03] border border-white/10 rounded-xl p-5">
-      <p className="text-xs uppercase tracking-widest text-white/25 font-semibold mb-2">
+    <div className="glass rounded-xl p-5">
+      <p className="text-xs uppercase tracking-widest text-ink-faint font-semibold mb-2">
         {label}
       </p>
-      <p className="text-3xl font-bold text-white">{value}</p>
+      <p className="text-3xl font-bold text-ink">{value}</p>
     </div>
   );
 }

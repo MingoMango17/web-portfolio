@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import VisitTracker from "@/components/VisitTracker";
+import AmbientBackground from "@/components/ui/AmbientBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,8 +36,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} antialiased bg-black text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} antialiased bg-base text-ink`}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] glass-strong rounded-lg px-4 py-2 text-sm text-ink"
+        >
+          Skip to main content
+        </a>
+        <AmbientBackground />
         <VisitTracker />
         {children}
       </body>

@@ -2,6 +2,7 @@
 
 import { Download } from "lucide-react";
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 
 export default function DownloadButton({ url }: { url: string }) {
   const [loading, setLoading] = useState(false);
@@ -23,13 +24,9 @@ export default function DownloadButton({ url }: { url: string }) {
   };
 
   return (
-    <button
-      onClick={handleDownload}
-      disabled={loading}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white/60 hover:text-white border border-white/10 hover:border-white/20 transition-colors disabled:opacity-40"
-    >
+    <Button variant="primary" onClick={handleDownload} disabled={loading}>
       <Download size={12} />
       {loading ? "Downloading…" : "Download"}
-    </button>
+    </Button>
   );
 }

@@ -5,6 +5,9 @@ import { createClient } from "@/lib/supabase-browser";
 import { revalidateSite } from "@/lib/revalidate";
 import { Skill, Tool } from "@/types";
 import { Pencil, Trash2, Plus, X } from "lucide-react";
+import Field from "@/components/admin/Field";
+import Button from "@/components/ui/Button";
+import SortableList from "@/components/admin/SortableList";
 
 const emptySkill = { name: "", level: 80, order_index: 0 };
 const emptyTool = { name: "", icon: "", order_index: 0 };
@@ -39,9 +42,22 @@ export default function SkillsAdmin() {
 
   // ── Skills CRUD ──────────────────────────────────────
   const openAddSkill = () => {
-    setSkillForm(emptySkill);
+    setSkillForm({ ...emptySkill, order_index: skills.length });
     setEditingSkillId(null);
     setShowSkillForm(true);
+  };
+
+  const reorderSkills = (list: Skill[]) => {
+    setSkills(list.map((s, i) => ({ ...s, order_index: i })));
+  };
+
+  const persistSkillOrder = async () => {
+    await Promise.all(
+      skills.map((s, i) =>
+        supabase.from("skills").update({ order_index: i }).eq("id", s.id)
+      )
+    );
+    await revalidateSite();
   };
 
   const openEditSkill = (s: Skill) => {
@@ -75,9 +91,22 @@ export default function SkillsAdmin() {
 
   // ── Tools CRUD ───────────────────────────────────────
   const openAddTool = () => {
-    setToolForm(emptyTool);
+    setToolForm({ ...emptyTool, order_index: tools.length });
     setEditingToolId(null);
     setShowToolForm(true);
+  };
+
+  const reorderTools = (list: Tool[]) => {
+    setTools(list.map((t, i) => ({ ...t, order_index: i })));
+  };
+
+  const persistToolOrder = async () => {
+    await Promise.all(
+      tools.map((t, i) =>
+        supabase.from("tools").update({ order_index: i }).eq("id", t.id)
+      )
+    );
+    await revalidateSite();
   };
 
   const openEditTool = (t: Tool) => {
@@ -115,75 +144,59 @@ export default function SkillsAdmin() {
       <div>
         <div className="flex items-center justify-between mb-8">
           <div>
-            <p className="text-xs uppercase tracking-widest text-lime-400 font-semibold mb-1">
+            <p className="text-xs uppercase tracking-widest text-accent font-semibold mb-1">
               Manage
             </p>
-            <h1 className="text-2xl font-bold text-white">Skills</h1>
-            <p className="text-white/30 text-xs mt-1">Progress bar proficiencies</p>
+            <h1 className="text-2xl font-bold text-ink">Skills</h1>
+            <p className="text-ink-faint text-xs mt-1">Progress bar proficiencies</p>
           </div>
-          <button
-            onClick={openAddSkill}
-            className="flex items-center gap-2 bg-lime-400 hover:bg-lime-300 text-black text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-          >
+          <Button onClick={openAddSkill}>
             <Plus size={15} />
             Add Skill
-          </button>
+          </Button>
         </div>
 
         {showSkillForm && (
-          <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6 mb-6">
+          <div className="glass-strong rounded-xl p-6 mb-6">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-white font-semibold">
+              <h2 className="text-ink font-semibold">
                 {editingSkillId ? "Edit Skill" : "New Skill"}
               </h2>
-              <button onClick={() => setShowSkillForm(false)} className="text-white/30 hover:text-white/60">
+              <button
+                onClick={() => setShowSkillForm(false)}
+                aria-label="Close form"
+                className="text-ink-faint hover:text-ink-muted"
+              >
                 <X size={18} />
               </button>
             </div>
             <form onSubmit={submitSkill} className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-1">
-                  <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">Name</label>
-                  <input
-                    value={skillForm.name}
-                    onChange={(e) => setSkillForm({ ...skillForm, name: e.target.value })}
-                    className="w-full bg-black border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">
-                    Level (0–100)
-                  </label>
-                  <input
-                    type="number"
-                    min={0}
-                    max={100}
-                    value={skillForm.level}
-                    onChange={(e) => setSkillForm({ ...skillForm, level: Number(e.target.value) })}
-                    className="w-full bg-black border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">Order</label>
-                  <input
-                    type="number"
-                    value={skillForm.order_index}
-                    onChange={(e) => setSkillForm({ ...skillForm, order_index: Number(e.target.value) })}
-                    className="w-full bg-black border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors"
-                  />
-                </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Field
+                  label="Name"
+                  value={skillForm.name}
+                  onChange={(v) => setSkillForm({ ...skillForm, name: v })}
+                  required
+                />
+                <Field
+                  label="Level (0–100)"
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={String(skillForm.level)}
+                  onChange={(v) => setSkillForm({ ...skillForm, level: Number(v) })}
+                  required
+                />
               </div>
               <div className="flex gap-3 pt-1">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-lime-400 hover:bg-lime-300 text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
-                >
+                <Button type="submit" disabled={loading}>
                   {loading ? "Saving…" : editingSkillId ? "Save Changes" : "Create"}
-                </button>
-                <button type="button" onClick={() => setShowSkillForm(false)} className="text-white/40 hover:text-white text-sm">
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => setShowSkillForm(false)}
+                  className="text-ink-muted hover:text-ink text-sm"
+                >
                   Cancel
                 </button>
               </div>
@@ -191,100 +204,97 @@ export default function SkillsAdmin() {
           </div>
         )}
 
-        <div className="space-y-2">
-          {skills.map((s) => (
-            <div key={s.id} className="flex items-center gap-4 bg-white/[0.03] border border-white/8 rounded-xl px-5 py-3 hover:border-white/15 transition-colors">
-              <span className="text-white/20 text-xs font-mono w-5">#{s.order_index}</span>
-              <span className="text-white text-sm flex-1">{s.name}</span>
+        <SortableList
+          items={skills}
+          onReorder={reorderSkills}
+          onDragEnd={persistSkillOrder}
+          getKey={(s) => s.id}
+          className="space-y-2"
+          renderItem={(s) => (
+            <div className="flex items-center gap-4 glass rounded-xl px-5 py-3 hover:border-white/20 transition-colors">
+              <span className="text-ink-faint text-xs font-mono w-5">#{s.order_index}</span>
+              <span className="text-ink text-sm flex-1">{s.name}</span>
               <div className="flex items-center gap-2 w-32">
-                <div className="flex-1 h-[2px] bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-lime-400 rounded-full" style={{ width: `${s.level}%` }} />
+                <div className="flex-1 h-1.5 bg-white/8 rounded-full overflow-hidden">
+                  <div className="h-full bg-accent rounded-full" style={{ width: `${s.level}%` }} />
                 </div>
-                <span className="text-lime-400 text-xs font-mono w-8 text-right">{s.level}%</span>
+                <span className="text-accent text-xs font-mono w-8 text-right">{s.level}%</span>
               </div>
               <div className="flex items-center gap-1">
-                <button onClick={() => openEditSkill(s)} className="p-2 rounded-lg text-white/30 hover:text-lime-400 hover:bg-lime-400/10 transition-all">
+                <button
+                  onClick={() => openEditSkill(s)}
+                  aria-label={`Edit ${s.name}`}
+                  className="p-2 rounded-lg text-ink-faint hover:text-accent hover:bg-accent/10 transition-all"
+                >
                   <Pencil size={13} />
                 </button>
-                <button onClick={() => deleteSkill(s.id)} className="p-2 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-400/10 transition-all">
+                <button
+                  onClick={() => deleteSkill(s.id)}
+                  aria-label={`Delete ${s.name}`}
+                  className="p-2 rounded-lg text-ink-faint hover:text-red-400 hover:bg-red-400/10 transition-all"
+                >
                   <Trash2 size={13} />
                 </button>
               </div>
             </div>
-          ))}
-        </div>
+          )}
+        />
       </div>
 
       {/* ── Tools ── */}
       <div>
         <div className="flex items-center justify-between mb-8">
           <div>
-            <p className="text-xs uppercase tracking-widest text-lime-400 font-semibold mb-1">
+            <p className="text-xs uppercase tracking-widest text-accent font-semibold mb-1">
               Manage
             </p>
-            <h1 className="text-2xl font-bold text-white">Tools</h1>
-            <p className="text-white/30 text-xs mt-1">Icon grid technologies</p>
+            <h1 className="text-2xl font-bold text-ink">Tools</h1>
+            <p className="text-ink-faint text-xs mt-1">Icon grid technologies</p>
           </div>
-          <button
-            onClick={openAddTool}
-            className="flex items-center gap-2 bg-lime-400 hover:bg-lime-300 text-black text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-          >
+          <Button onClick={openAddTool}>
             <Plus size={15} />
             Add Tool
-          </button>
+          </Button>
         </div>
 
         {showToolForm && (
-          <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6 mb-6">
+          <div className="glass-strong rounded-xl p-6 mb-6">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-white font-semibold">
+              <h2 className="text-ink font-semibold">
                 {editingToolId ? "Edit Tool" : "New Tool"}
               </h2>
-              <button onClick={() => setShowToolForm(false)} className="text-white/30 hover:text-white/60">
+              <button
+                onClick={() => setShowToolForm(false)}
+                aria-label="Close form"
+                className="text-ink-faint hover:text-ink-muted"
+              >
                 <X size={18} />
               </button>
             </div>
             <form onSubmit={submitTool} className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">Name</label>
-                  <input
-                    value={toolForm.name}
-                    onChange={(e) => setToolForm({ ...toolForm, name: e.target.value })}
-                    className="w-full bg-black border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">
-                    Icon path (e.g. /react.png)
-                  </label>
-                  <input
-                    value={toolForm.icon}
-                    onChange={(e) => setToolForm({ ...toolForm, icon: e.target.value })}
-                    className="w-full bg-black border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-white/30 uppercase tracking-widest block mb-1.5">Order</label>
-                  <input
-                    type="number"
-                    value={toolForm.order_index}
-                    onChange={(e) => setToolForm({ ...toolForm, order_index: Number(e.target.value) })}
-                    className="w-full bg-black border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-lime-400/50 transition-colors"
-                  />
-                </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Field
+                  label="Name"
+                  value={toolForm.name}
+                  onChange={(v) => setToolForm({ ...toolForm, name: v })}
+                  required
+                />
+                <Field
+                  label="Icon path (e.g. /react.png)"
+                  value={toolForm.icon}
+                  onChange={(v) => setToolForm({ ...toolForm, icon: v })}
+                  required
+                />
               </div>
               <div className="flex gap-3 pt-1">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-lime-400 hover:bg-lime-300 text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
-                >
+                <Button type="submit" disabled={loading}>
                   {loading ? "Saving…" : editingToolId ? "Save Changes" : "Create"}
-                </button>
-                <button type="button" onClick={() => setShowToolForm(false)} className="text-white/40 hover:text-white text-sm">
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => setShowToolForm(false)}
+                  className="text-ink-muted hover:text-ink text-sm"
+                >
                   Cancel
                 </button>
               </div>
@@ -292,23 +302,36 @@ export default function SkillsAdmin() {
           </div>
         )}
 
-        <div className="space-y-2">
-          {tools.map((t) => (
-            <div key={t.id} className="flex items-center gap-4 bg-white/[0.03] border border-white/8 rounded-xl px-5 py-3 hover:border-white/15 transition-colors">
-              <span className="text-white/20 text-xs font-mono w-5">#{t.order_index}</span>
-              <span className="text-white text-sm flex-1">{t.name}</span>
-              <span className="text-white/25 text-xs font-mono">{t.icon}</span>
+        <SortableList
+          items={tools}
+          onReorder={reorderTools}
+          onDragEnd={persistToolOrder}
+          getKey={(t) => t.id}
+          className="space-y-2"
+          renderItem={(t) => (
+            <div className="flex items-center gap-4 glass rounded-xl px-5 py-3 hover:border-white/20 transition-colors">
+              <span className="text-ink-faint text-xs font-mono w-5">#{t.order_index}</span>
+              <span className="text-ink text-sm flex-1">{t.name}</span>
+              <span className="text-ink-faint text-xs font-mono">{t.icon}</span>
               <div className="flex items-center gap-1">
-                <button onClick={() => openEditTool(t)} className="p-2 rounded-lg text-white/30 hover:text-lime-400 hover:bg-lime-400/10 transition-all">
+                <button
+                  onClick={() => openEditTool(t)}
+                  aria-label={`Edit ${t.name}`}
+                  className="p-2 rounded-lg text-ink-faint hover:text-accent hover:bg-accent/10 transition-all"
+                >
                   <Pencil size={13} />
                 </button>
-                <button onClick={() => deleteTool(t.id)} className="p-2 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-400/10 transition-all">
+                <button
+                  onClick={() => deleteTool(t.id)}
+                  aria-label={`Delete ${t.name}`}
+                  className="p-2 rounded-lg text-ink-faint hover:text-red-400 hover:bg-red-400/10 transition-all"
+                >
                   <Trash2 size={13} />
                 </button>
               </div>
             </div>
-          ))}
-        </div>
+          )}
+        />
       </div>
     </div>
   );
