@@ -1,10 +1,46 @@
+"use client";
+
 import { ArrowUpRight, Github } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BlurFade from "./BlurFade";
 import SectionHeading from "./ui/SectionHeading";
 import Tag from "./ui/Tag";
 import { Project } from "@/types";
+
+const ProjectDescription = ({ description }: { description: string }) => {
+  const [expanded, setExpanded] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (!el) return;
+    setIsTruncated(el.scrollHeight > el.clientHeight + 1);
+  }, [description]);
+
+  return (
+    <div className="mb-5">
+      <p
+        ref={textRef}
+        className={`text-ink-muted text-sm leading-relaxed max-w-lg ${
+          expanded ? "" : "line-clamp-3"
+        }`}
+      >
+        {description}
+      </p>
+      {(isTruncated || expanded) && (
+        <button
+          type="button"
+          onClick={() => setExpanded((prev) => !prev)}
+          className="text-xs text-accent/70 hover:text-accent transition-colors duration-200 mt-1.5"
+        >
+          {expanded ? "Show less" : "Read more"}
+        </button>
+      )}
+    </div>
+  );
+};
 
 const Projects = ({ projects }: { projects: Project[] }) => {
   return (
@@ -51,9 +87,7 @@ const Projects = ({ projects }: { projects: Project[] }) => {
                       </h3>
                     </div>
 
-                    <p className="text-ink-muted text-sm leading-relaxed mb-5 max-w-lg line-clamp-3">
-                      {project.description}
-                    </p>
+                    <ProjectDescription description={project.description} />
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-5">
